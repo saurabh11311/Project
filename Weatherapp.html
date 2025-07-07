@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Weather App</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #60a5fa, #3b82f6);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+    }
+
+    .weather-box {
+      background: rgba(255, 255, 255, 0.2);
+      padding: 30px;
+      border-radius: 12px;
+      text-align: center;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    }
+
+    input {
+      padding: 10px;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
+      margin-right: 10px;
+    }
+
+    button {
+      padding: 10px 15px;
+      font-size: 16px;
+      background: #2563eb;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background: #1e40af;
+    }
+
+    .result {
+      margin-top: 20px;
+      font-size: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🌦 Weather App</h1>
+  <div class="weather-box">
+    <input type="text" id="city" placeholder="Enter city name">
+    <button onclick="getWeather()">Get Weather</button>
+    <div class="result" id="result"></div>
+  </div>
+
+  <script>
+    async function getWeather() {
+      const city = document.getElementById('city').value.trim();
+      const resultEl = document.getElementById('result');
+
+      if (!city) {
+        resultEl.innerHTML = "Please enter a city!";
+        return;
+      }
+
+      // Replace YOUR_API_KEY with your actual API key from openweathermap.org
+      const apiKey = "https://openweathermap.org/api";
+      const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
+
+      try {
+        const response = await fetch(url);
+        if (!response.ok) throw new Error("City not found");
+        const data = await response.json();
+
+        resultEl.innerHTML = `
+          <strong>${data.name}, ${data.sys.country}</strong><br>
+          🌡 ${data.main.temp}°C<br>
+          🌤 ${data.weather[0].main} (${data.weather[0].description})<br>
+          💨 Wind: ${data.wind.speed} m/s
+        `;
+      } catch (error) {
+        resultEl.innerHTML = "City not found or API error!";
+      }
+    }
+  </script>
+
+</body>
+</html>

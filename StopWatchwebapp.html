@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Stopwatch App</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #4f46e5, #06b6d4);
+      background-size: 400% 400%;
+      animation: gradientBG 10s ease infinite;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      color: #fff;
+    }
+
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    h1 {
+      margin-bottom: 20px;
+      text-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+    }
+
+    .display {
+      font-size: 48px;
+      background: rgba(255, 255, 255, 0.2);
+      padding: 20px 40px;
+      border-radius: 12px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+      margin-bottom: 30px;
+    }
+
+    .buttons button {
+      padding: 10px 20px;
+      font-size: 18px;
+      margin: 0 10px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .start {
+      background: #22c55e;
+      color: #fff;
+    }
+
+    .start:hover {
+      background: #16a34a;
+    }
+
+    .stop {
+      background: #ef4444;
+      color: #fff;
+    }
+
+    .stop:hover {
+      background: #b91c1c;
+    }
+
+    .reset {
+      background: #facc15;
+      color: #000;
+    }
+
+    .reset:hover {
+      background: #eab308;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>⏱ Stopwatch</h1>
+  <div class="display" id="display">00:00:00</div>
+  <div class="buttons">
+    <button class="start" onclick="startStopwatch()">Start</button>
+    <button class="stop" onclick="stopStopwatch()">Stop</button>
+    <button class="reset" onclick="resetStopwatch()">Reset</button>
+  </div>
+
+  <script>
+    let startTime = 0;
+    let elapsedTime = 0;
+    let timerInterval;
+
+    function timeToString(time) {
+      let hrs = Math.floor(time / 3600000);
+      let mins = Math.floor((time % 3600000) / 60000);
+      let secs = Math.floor((time % 60000) / 1000);
+
+      return (
+        (hrs < 10 ? "0" + hrs : hrs) + ":" +
+        (mins < 10 ? "0" + mins : mins) + ":" +
+        (secs < 10 ? "0" + secs : secs)
+      );
+    }
+
+    function startStopwatch() {
+      if (timerInterval) return; // prevent multiple intervals
+      startTime = Date.now() - elapsedTime;
+      timerInterval = setInterval(function printTime() {
+        elapsedTime = Date.now() - startTime;
+        document.getElementById("display").innerText = timeToString(elapsedTime);
+      }, 1000);
+    }
+
+    function stopStopwatch() {
+      clearInterval(timerInterval);
+      timerInterval = null;
+    }
+
+    function resetStopwatch() {
+      clearInterval(timerInterval);
+      timerInterval = null;
+      startTime = 0;
+      elapsedTime = 0;
+      document.getElementById("display").innerText = "00:00:00";
+    }
+  </script>
+
+</body>
+</html>
